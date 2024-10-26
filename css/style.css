@@ -120,6 +120,7 @@
 @media (max-width: 768px) {
     .div-text-container {
         background: rgba(128, 128, 128, 0.7);
+        border-radius: 5%;
     }
 }
 
