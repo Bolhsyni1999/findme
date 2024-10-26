@@ -120,8 +120,12 @@
 @media (max-width: 768px) {
     .div-text-container {
         background: rgba(128, 128, 128, 0.7);
-        border-radius: 5%;
+        border-radius: 10%;
     }
+    .find-me-color {
+        color: #191b17ec;
+    }
+
 }
 
 .btn-play {
