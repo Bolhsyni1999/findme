@@ -121,7 +121,7 @@
     .div-text-container {
         border: 1px solid red;
         background-color: #D9D9D9;
-        opacity: 0.4;
+        /* opacity: 0.4; */
     }
 }
 
