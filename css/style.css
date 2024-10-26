@@ -122,11 +122,22 @@
         background: rgba(128, 128, 128, 0.7);
         border-radius: 10%;
     }
-    .find-me-color {
-        color: #191b17ec;
-    }
-
 }
+
+//for screens smaller then mobile
+@media only screen and (max-width: 600px) {
+  .colourTest {
+   text-color: black;
+}
+}
+
+//for screens bigger then mobile
+@media only screen and (min-width: 600px) {
+  .colourTest {
+   text-color: white;
+}
+}
+
 
 .btn-play {
     position: relative;
