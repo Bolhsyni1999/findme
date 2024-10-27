@@ -1,4 +1,12 @@
 <?php
+// Load PHPMailer classes
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require 'PHPMailer/src/Exception.php';
+require 'PHPMailer/src/PHPMailer.php';
+require 'PHPMailer/src/SMTP.php';
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get form fields and remove whitespace.
     $name = strip_tags(trim($_POST["name"]));
@@ -15,34 +23,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
-    // Set the recipient email address.
-    $recipient = "akeep199@gmail.com"; // Replace with your email address
+    // Create a new PHPMailer instance
+    $mail = new PHPMailer(true);
 
-    // Set the email subject.
-    $email_subject = "New Contact from $name: $subject";
+    try {
+        // SMTP server configuration
+        $mail->isSMTP();
+        $mail->Host = 'sandbox.smtp.mailtrap.io';            // Replace with your SMTP server
+        $mail->SMTPAuth = true;
+        $mail->Username = '844d716ae47c66';  // Replace with your SMTP username
+        $mail->Password = 'fdc86c68d58c9b';        // Replace with your SMTP password
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Use `PHPMailer::ENCRYPTION_SMTPS` for SSL
+        $mail->Port = 587;                              // Replace with your SMTP port (587 for TLS, 465 for SSL)
 
-    // Build the email content.
-    $email_content = "Name: $name\n";
-    $email_content .= "Email: $email\n\n";
-    $email_content .= "Subject: $subject\n\n";
-    $email_content .= "Message:\n$message\n";
 
-    // Build the email headers.
-    $email_headers = "From: $name <$email>";
+		// Enable SMTP debugging
+		$mail->SMTPDebug = 2;
 
-    // Send the email.
-    if (mail($recipient, $email_subject, $email_content, $email_headers)) {
+        // Set email content
+        $mail->setFrom($email, $name);
+        $mail->addAddress('recipient-email@findme.ma'); // Replace with recipient's email address
+        $mail->Subject = "New Contact from $name: $subject";
+        $mail->Body = "Name: $name\nEmail: $email\n\nSubject: $subject\n\nMessage:\n$message";
+
+        // Send the email
+        $mail->send();
+        
         // Set a 200 (okay) response code.
         http_response_code(200);
         echo "Thank You! Your message has been sent.";
-    } else {
+
+    } catch (Exception $e) {
         // Set a 500 (internal server error) response code.
         http_response_code(500);
-        echo "Oops! Something went wrong, and we couldn't send your message.";
+        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
     }
 } else {
     // Not a POST request, set a 403 (forbidden) response code.
     http_response_code(403);
     echo "There was a problem with your submission, please try again.";
 }
-?>
